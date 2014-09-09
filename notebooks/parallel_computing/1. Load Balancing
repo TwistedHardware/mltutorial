@@ -1,0 +1,404 @@
+{
+ "metadata": {
+  "name": "",
+  "signature": "sha256:2ef1f469d0f8b11ef269f69c5c11d2204b7590f0e32571f15199f4c3077b9eac"
+ },
+ "nbformat": 3,
+ "nbformat_minor": 0,
+ "worksheets": [
+  {
+   "cells": [
+    {
+     "cell_type": "heading",
+     "level": 1,
+     "metadata": {},
+     "source": [
+      "Tutorial Brief"
+     ]
+    },
+    {
+     "cell_type": "markdown",
+     "metadata": {},
+     "source": [
+      "The IPython architecture consists of four components:\n",
+      "\n",
+      "- The IPython engine\n",
+      "- The IPython hub\n",
+      "- The IPython schedulers\n",
+      "- The controller client\n",
+      "\n",
+      "![](http://ipython.org/ipython-doc/stable/_images/wideView.png)\n",
+      "\n",
+      "Dependencies:\n",
+      "\n",
+      "- ZeroMQ - http://zeromq.org/\n",
+      "![](http://zeromq.wdfiles.com/local--files/admin:css/logo.gif)\n",
+      "\n",
+      "To install on Ubuntu:\n",
+      "\n",
+      "```bash\n",
+      "sudo apt-get install libzmq-dev\n",
+      "sudo easy_install pyzmq\n",
+      "```\n",
+      "- pyzmq\n",
+      "\n",
+      "To install on Ubuntu:\n",
+      "\n",
+      "```bash\n",
+      "sudo pip install pyzmq\n",
+      "```"
+     ]
+    },
+    {
+     "cell_type": "heading",
+     "level": 1,
+     "metadata": {},
+     "source": [
+      "Parallel and Distributed Computing"
+     ]
+    },
+    {
+     "cell_type": "markdown",
+     "metadata": {},
+     "source": [
+      "**Parallel computing**: Multiple processors or cores to distribute the work on a sinlge machine.\n",
+      "\n",
+      "**Distributed computing**: Multiple processors or cores located on multiple machines to distribute the work on a several machines.\n"
+     ]
+    },
+    {
+     "cell_type": "heading",
+     "level": 1,
+     "metadata": {},
+     "source": [
+      "Load Balancing"
+     ]
+    },
+    {
+     "cell_type": "markdown",
+     "metadata": {},
+     "source": [
+      "This will be our first approach to parellel/distributed computing."
+     ]
+    },
+    {
+     "cell_type": "heading",
+     "level": 2,
+     "metadata": {},
+     "source": [
+      "Start the engines"
+     ]
+    },
+    {
+     "cell_type": "markdown",
+     "metadata": {},
+     "source": [
+      "I'll start the engines on a profile named \"nbserver\"."
+     ]
+    },
+    {
+     "cell_type": "heading",
+     "level": 2,
+     "metadata": {},
+     "source": [
+      "Import `Client`"
+     ]
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "from IPython.parallel import Client"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 1
+    },
+    {
+     "cell_type": "heading",
+     "level": 2,
+     "metadata": {},
+     "source": [
+      "Create a `Client` and a `load_balanced_view`"
+     ]
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "cluster = Client(profile=\"nbserver\")\n",
+      "lb_view = cluster.load_balanced_view()\n",
+      "\n",
+      "print \"Profile: %s\" % cluster.profile\n",
+      "print \"Engines: %s\" % len(lb_view)"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [
+      {
+       "output_type": "stream",
+       "stream": "stdout",
+       "text": [
+        "Profile: nbserver\n",
+        "Engines: 12\n"
+       ]
+      }
+     ],
+     "prompt_number": 2
+    },
+    {
+     "cell_type": "heading",
+     "level": 2,
+     "metadata": {},
+     "source": [
+      "With no Load Balancing"
+     ]
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "def f(x):\n",
+      "    result = 1.0\n",
+      "    for counter in range(100000):\n",
+      "        result = (result * x * 0.5)\n",
+      "        if result % 5 == 0:\n",
+      "            result -=4\n",
+      "    return result"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 3
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "%%timeit -r 1 -n 1\n",
+      "result = []\n",
+      "for i in range(1000):\n",
+      "    result.append(f(i))"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [
+      {
+       "output_type": "stream",
+       "stream": "stdout",
+       "text": [
+        "1 loops, best of 1: 23.8 s per loop\n"
+       ]
+      }
+     ],
+     "prompt_number": 4
+    },
+    {
+     "cell_type": "heading",
+     "level": 2,
+     "metadata": {},
+     "source": [
+      "With Load Balancing"
+     ]
+    },
+    {
+     "cell_type": "markdown",
+     "metadata": {},
+     "source": [
+      "Using load balanced view can help simplify the process of distributing code. There are two methods to implement this."
+     ]
+    },
+    {
+     "cell_type": "heading",
+     "level": 3,
+     "metadata": {},
+     "source": [
+      "`view.map(f, *sequences, block=self.block, chunksize=1, ordered=True)`"
+     ]
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "def f(x):\n",
+      "    result = 1.0\n",
+      "    for counter in range(100000):\n",
+      "        result = (result * x * 0.5)\n",
+      "        if result % 5 == 0:\n",
+      "            result -=4\n",
+      "    return result"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 7
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "%%timeit -r 1 -n 1\n",
+      "result = lb_view.map(f, range(1000), block=True)"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [
+      {
+       "output_type": "stream",
+       "stream": "stdout",
+       "text": [
+        "1 loops, best of 1: 5.13 s per loop\n"
+       ]
+      }
+     ],
+     "prompt_number": 9
+    },
+    {
+     "cell_type": "heading",
+     "level": 3,
+     "metadata": {},
+     "source": [
+      "`@view.parallel()` function decorator"
+     ]
+    },
+    {
+     "cell_type": "markdown",
+     "metadata": {},
+     "source": [
+      "Using `parallel` function decorator is by far the simplist way to implement parellel computing in IPython. It doesn't allow for much control but it is fast and works for most of the cases.\n",
+      "\n",
+      "```\n",
+      "load_balanced_view.parallel(self, dist='b', block=None, **flags)\n",
+      "\n",
+      "Decorator for making a ParallelFunction\n",
+      "```"
+     ]
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "@lb_view.parallel(block=True)\n",
+      "def f(x):\n",
+      "    result = 1.0\n",
+      "    for counter in range(100000):\n",
+      "        result = (result * x * 0.5)\n",
+      "        if result % 5 == 0:\n",
+      "            result -=4\n",
+      "    return result"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 10
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "result = f.map(range(1000))\n",
+      "print \"Results Count: %s\" % len(result)"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [
+      {
+       "output_type": "stream",
+       "stream": "stdout",
+       "text": [
+        "Results Count: 1000\n"
+       ]
+      }
+     ],
+     "prompt_number": 15
+    },
+    {
+     "cell_type": "heading",
+     "level": 2,
+     "metadata": {},
+     "source": [
+      "Asynchronous Processing"
+     ]
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "@lb_view.parallel(block=False)\n",
+      "def f(x):\n",
+      "    result = 1.0\n",
+      "    for counter in range(100000):\n",
+      "        result = (result * x * 0.5)\n",
+      "        if result % 5 == 0:\n",
+      "            result -=4\n",
+      "    return result"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 16
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "result = f.map(range(1000))"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 31
+    },
+    {
+     "cell_type": "heading",
+     "level": 3,
+     "metadata": {},
+     "source": [
+      "Retreving the results from AsyncMapResult "
+     ]
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "result"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [
+      {
+       "metadata": {},
+       "output_type": "pyout",
+       "prompt_number": 34,
+       "text": [
+        "<AsyncMapResult: finished>"
+       ]
+      }
+     ],
+     "prompt_number": 34
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "print \"Results Count: %s\" % len(result.result)"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [
+      {
+       "output_type": "stream",
+       "stream": "stdout",
+       "text": [
+        "Results Count: 1000\n"
+       ]
+      }
+     ],
+     "prompt_number": 33
+    }
+   ],
+   "metadata": {}
+  }
+ ]
+}
