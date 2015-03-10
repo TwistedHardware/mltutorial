@@ -1,0 +1,531 @@
+{
+ "metadata": {
+  "name": "",
+  "signature": "sha256:228eb1cfce02c0cea520b712be7113ec81098576ee07fcaf0a133e421f622343"
+ },
+ "nbformat": 3,
+ "nbformat_minor": 0,
+ "worksheets": [
+  {
+   "cells": [
+    {
+     "cell_type": "heading",
+     "level": 1,
+     "metadata": {},
+     "source": [
+      "Lesson Brief"
+     ]
+    },
+    {
+     "cell_type": "markdown",
+     "metadata": {},
+     "source": [
+      "In this you will learn all about the following:\n",
+      "\n",
+      "- Platform: AWS\n",
+      "- Programming language: Python\n",
+      "- IDE: IPython Notebooks\n",
+      "- Libraries: Numpy, Pandas\n",
+      "- Administration and Monitoring with Ajenti"
+     ]
+    },
+    {
+     "cell_type": "heading",
+     "level": 1,
+     "metadata": {},
+     "source": [
+      "Amazon Web Services"
+     ]
+    },
+    {
+     "cell_type": "markdown",
+     "metadata": {},
+     "source": [
+      "AWS is a cloud computing service offering a range of managed and unmanaged services. We will be working with EC2 which is commonly used for performing \"Machine Learning\" processing in production environment.\n",
+      "\n",
+      "AWS EC2 offers a FREE Trier which is what we will be working with. So if you don't have an AWS account yet, please create one.\n",
+      "\n",
+      "https://aws.amazon.com"
+     ]
+    },
+    {
+     "cell_type": "heading",
+     "level": 2,
+     "metadata": {},
+     "source": [
+      "Alternative - Local Setup"
+     ]
+    },
+    {
+     "cell_type": "markdown",
+     "metadata": {},
+     "source": [
+      "Ubuntu (VM)\n",
+      "Install:\n",
+      "\n",
+      "- python-dev\n",
+      "- python-pip\n",
+      "- python-ipython\n",
+      "- python-numpy\n",
+      "- python-scipy\n",
+      "\n",
+      "Start Server:\n",
+      "\n",
+      "ipython notebook"
+     ]
+    },
+    {
+     "cell_type": "heading",
+     "level": 1,
+     "metadata": {},
+     "source": [
+      "Python"
+     ]
+    },
+    {
+     "cell_type": "markdown",
+     "metadata": {},
+     "source": [
+      "We will be coding most of our work in python, so it important to be familiar with the language. One good I found was \"Learn Python the Hard Way\" which is available for free online.\n",
+      "\n",
+      "http://learnpythonthehardway.org/book/\n",
+      "\n",
+      "I'll go over some basics that will get you started."
+     ]
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "x = 10\n",
+      "y = 5\n",
+      "z = x + y\n",
+      "print z"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": []
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "word_1 = \"Hello\"\n",
+      "word_2 = \"Python\"\n",
+      "sentence = word_1 + \" \" + word_2\n",
+      "print sentence"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": []
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "# Let's do some math\n",
+      "print x + y\n",
+      "print x - y\n",
+      "print x * y\n",
+      "print x / y"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": []
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "# Formating String\n",
+      "template = \"Hello %s\"\n",
+      "print template % \"Python\""
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": []
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "# Using string formating to improve math results\n",
+      "print \"Add Result: %s\" % (x + y)\n",
+      "print \"Subtract Result: %s\" % (x - y)\n",
+      "print \"Multiply Result: %s\" % (x * y)\n",
+      "print \"Divide Result: %s\" % (x / y)"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": []
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "# Passing Multiple Parameters to a string\n",
+      "template = \"%s %s %s = %s\"\n",
+      "print template % (x, \"+\", y, x+y)\n",
+      "print template % (x, \"-\", y, x-y)\n",
+      "print template % (x, \"*\", y, x*y)\n",
+      "print template % (x, \"/\", y, x/y)"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": []
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "# List, Tupal and Dictionary\n",
+      "numbers_list = [1,2,3,4,5]\n",
+      "numbers_tupal = (1,2,3,4,5)\n",
+      "numbers_dict = {1:1, 2:2, 3:3, 4:4, 5:5}\n",
+      "\n",
+      "# List\n",
+      "print \"Full List: %s\" % numbers_list\n",
+      "print \"List Length: %s\" % len(numbers_list)\n",
+      "print \"First Item: %s\" % numbers_list[0]\n",
+      "print \"Last Item: %s\" % numbers_list[-1]\n",
+      "print \"\"\n",
+      "\n",
+      "# Tupal\n",
+      "print \"Full Tupal: %s\" % str(numbers_tupal)\n",
+      "print \"Tupal Length: %s\" % len(numbers_tupal)\n",
+      "print \"First Item: %s\" % numbers_tupal[0]\n",
+      "print \"Last Item: %s\" % numbers_tupal[-1]\n",
+      "print \"\"\n",
+      "\n",
+      "# Dictionary\n",
+      "print \"Full Dictionary: %s\" % str(numbers_dict)\n",
+      "print \"Dictionary Length: %s\" % len(numbers_dict)\n",
+      "print \"First Item: %s\" % numbers_dict.values()[0]\n",
+      "print \"Last Item: %s\" % numbers_dict.values()[-1]\n",
+      "print \"\""
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": []
+    },
+    {
+     "cell_type": "heading",
+     "level": 1,
+     "metadata": {},
+     "source": [
+      "IPython Notebooks"
+     ]
+    },
+    {
+     "cell_type": "markdown",
+     "metadata": {},
+     "source": [
+      "IPython Notebook will be our Intergrated Development Environment (IDE). It is web-based and support interactive development. This comes in handy once we are working with data and we would develop out logic based on the data and results.\n",
+      "\n",
+      "In can write code and execute it on the spot and have others access your work to truely work as a team.\n",
+      "\n",
+      "It also support inline charts and LATEX to visualize your work and results.\n",
+      "\n",
+      "Let's test LATEX first to see can it can make our functions more readable\n",
+      "\n",
+      "\n"
+     ]
+    },
+    {
+     "cell_type": "raw",
+     "metadata": {},
+     "source": [
+      "Text code for function\n",
+      "f(x) = (x ** 2 + 2 * x) / (1-epsilon)"
+     ]
+    },
+    {
+     "cell_type": "markdown",
+     "metadata": {},
+     "source": [
+      "LATEX code for a function\n",
+      "\n",
+      "### $f(x) = \\frac{(x ^ 2 + 2x)}{(1-\\epsilon)}$"
+     ]
+    },
+    {
+     "cell_type": "heading",
+     "level": 2,
+     "metadata": {},
+     "source": [
+      "Charts"
+     ]
+    },
+    {
+     "cell_type": "markdown",
+     "metadata": {},
+     "source": [
+      "A good resource for finding chart examples is:\n",
+      "\n",
+      "http://matplotlib.org/gallery.html"
+     ]
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "import matplotlib.pyplot as plt\n",
+      "X = [1,2,3,4,5]\n",
+      "Y = [3,2,5,0,1]\n",
+      "plt.plot(X, Y)"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": []
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "plt.scatter(X, Y)"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": []
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "plt.scatter(X, Y, c=Y)"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": []
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "plt.scatter( X, Y, c=Y, marker=\"*\", s=400)\n",
+      "# Complete list of markers\n",
+      "# http://matplotlib.org/api/markers_api.html"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": []
+    },
+    {
+     "cell_type": "heading",
+     "level": 3,
+     "metadata": {},
+     "source": [
+      "A Teaser"
+     ]
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "from mpl_toolkits.mplot3d import axes3d\n",
+      "import matplotlib.pyplot as plt\n",
+      "from matplotlib import cm\n",
+      "\n",
+      "fig = plt.figure(figsize=(10,10))\n",
+      "ax = fig.gca(projection='3d')\n",
+      "X, Y, Z = axes3d.get_test_data(0.05)\n",
+      "ax.plot_surface(X, Y, Z, rstride=4, cstride=4, alpha=0.3)\n",
+      "cset = ax.contourf(X, Y, Z, zdir='z', offset=-100, cmap=cm.coolwarm)\n",
+      "cset = ax.contourf(X, Y, Z, zdir='x', offset=-40, cmap=cm.coolwarm)\n",
+      "cset = ax.contourf(X, Y, Z, zdir='y', offset=40, cmap=cm.coolwarm)\n",
+      "\n",
+      "ax.set_xlabel('X')\n",
+      "ax.set_xlim(-40, 40)\n",
+      "ax.set_ylabel('Y')\n",
+      "ax.set_ylim(-40, 40)\n",
+      "ax.set_zlabel('Z')\n",
+      "ax.set_zlim(-100, 100)\n",
+      "\n",
+      "plt.show()"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": []
+    },
+    {
+     "cell_type": "heading",
+     "level": 1,
+     "metadata": {},
+     "source": [
+      "Numpy and Pandas"
+     ]
+    },
+    {
+     "cell_type": "markdown",
+     "metadata": {},
+     "source": [
+      "**Numpy**: A powerful library for dealing with large amount of numbers. It performs operation much faster than pure python.\n",
+      "\n",
+      "**Pandas**: Introduces DataSeries and DataFrame which are based on Numpy arrays. These objects provide many out-of-the-box tools to analize and perform complex operations on your data."
+     ]
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "import numpy as np\n",
+      "import pandas as pd\n",
+      "array = np.arange(100)\n",
+      "array = array.reshape((10,10))\n",
+      "df = pd.DataFrame(array)\n",
+      "print df"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": []
+    },
+    {
+     "cell_type": "heading",
+     "level": 2,
+     "metadata": {},
+     "source": [
+      "Performs Operations on Complete List"
+     ]
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "print df[1] - df[0]"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": []
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "print df[1] + df[0]"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": []
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "print df[1] * df[0] - df[3]"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": []
+    },
+    {
+     "cell_type": "heading",
+     "level": 2,
+     "metadata": {},
+     "source": [
+      "Read Data From CSV"
+     ]
+    },
+    {
+     "cell_type": "markdown",
+     "metadata": {},
+     "source": [
+      "We can read CSV file located on our system or on the internet."
+     ]
+    },
+    {
+     "cell_type": "heading",
+     "level": 3,
+     "metadata": {},
+     "source": [
+      "Upload A File to the System with Ajenti"
+     ]
+    },
+    {
+     "cell_type": "markdown",
+     "metadata": {},
+     "source": [
+      "You can open Ajenti by opening this link:"
+     ]
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "from IPython.display import HTML\n",
+      "\n",
+      "input_form = \"\"\"\n",
+      "<a id=\"admin_link\" target=\"_blank\" href=\"#\">Ajenti Administration Interface</a>\n",
+      "<p>User: root<br> Password: admin</p>\n",
+      "\"\"\"\n",
+      "\n",
+      "javascript = \"\"\"\n",
+      "<script type=\"text/Javascript\">\n",
+      "document.getElementById('admin_link').href = \"https://\" + window.location.hostname + \":8000\"\n",
+      "</script>\n",
+      "\"\"\"\n",
+      "\n",
+      "HTML(input_form + javascript)"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [
+      {
+       "html": [
+        "\n",
+        "<a id=\"admin_link\" target=\"_blank\" href=\"#\">Ajenti Administration Interface</a>\n",
+        "<p>User: root<br> Password: admin</p>\n",
+        "\n",
+        "<script type=\"text/Javascript\">\n",
+        "document.getElementById('admin_link').href = \"https://\" + window.location.hostname + \":8000\"\n",
+        "</script>\n"
+       ],
+       "metadata": {},
+       "output_type": "pyout",
+       "prompt_number": 1,
+       "text": [
+        "<IPython.core.display.HTML at 0x7fc6e58037d0>"
+       ]
+      }
+     ],
+     "prompt_number": 1
+    },
+    {
+     "cell_type": "heading",
+     "level": 3,
+     "metadata": {},
+     "source": [
+      "Read File from Local System"
+     ]
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "csv_data = pd.read_csv(\"data/yourfile.csv\")"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": []
+    },
+    {
+     "cell_type": "markdown",
+     "metadata": {},
+     "source": [
+      "### End of Lesson 1\n",
+      "For questions please leave them on:\n",
+      "\n",
+      "- <a href=\"https://www.youtube.com/user/roshanRush\">YouTube</a>\n",
+      "- <a href=\"https://twitter.com/twistedhardware\">Twitter</a>\n",
+      "- <a href=\"https://plus.google.com/+Tcsaroshan/posts\">Google+</a>\n",
+      "\n",
+      "<a href=\"/notebooks/Lesson 1 - Intoroduction to Machine Learning.ipynb\">Next Lesson - Intoroduction to Machine Learning</a>\n",
+      "\n",
+      "In the next lesson:\n",
+      "- kNN Classification"
+     ]
+    }
+   ],
+   "metadata": {}
+  }
+ ]
+}
