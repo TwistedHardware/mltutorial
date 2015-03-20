@@ -1,0 +1,14 @@
+((*- extends 'article.tplx' -*))
+
+((* block author *))
+\author{Your Name}
+((* endblock author *))
+
+((* block title *))
+\title{Title of your paper}
+((* endblock title *))
+
+((* block bibliography *))
+\bibliographystyle{plain}
+\bibliography{ref}
+((* endblock bibliography *))
